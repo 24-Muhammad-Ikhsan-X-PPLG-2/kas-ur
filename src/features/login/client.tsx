@@ -7,6 +7,7 @@ import { z } from "zod";
 import { Eye, EyeClosed } from "lucide-react";
 import AuthService from "@/service/AuthService";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z
@@ -30,6 +31,7 @@ const LoginClient = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -58,6 +60,7 @@ const LoginClient = () => {
         toast.error(error.message);
         return;
       }
+      router.push("/");
     } catch (e: any) {
       console.error(e);
       if (e instanceof Error) {
