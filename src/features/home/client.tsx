@@ -273,6 +273,10 @@ const HomeClient = () => {
             <p className="mt-1 text-sm leading-relaxed text-[#6f6262]">
               Kas kelas digunakan untuk kebutuhan bersama XI PPLG 2.
             </p>
+            <p className="mt-2 text-xs font-bold text-[#550000]">
+              Catatan penting: jangan lupa bayar uang kas, nanti dicambuk Riki
+              (katanya).
+            </p>
           </div>
         </aside>
       </div>

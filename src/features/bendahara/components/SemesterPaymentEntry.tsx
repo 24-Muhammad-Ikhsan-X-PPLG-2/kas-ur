@@ -26,6 +26,8 @@ const SemesterPaymentEntry: FC<Props> = ({
 }) => {
   const [memberId, setMemberId] = useState("");
   const [selectedPeriods, setSelectedPeriods] = useState<number[]>([]);
+  const [anchorPeriodId, setAnchorPeriodId] = useState<number | null>(null);
+  const [isRangeMode, setIsRangeMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const paidPeriodKeys = new Set(
@@ -43,9 +45,39 @@ const SemesterPaymentEntry: FC<Props> = ({
   const handleMemberChange = (nextMemberId: string) => {
     setMemberId(nextMemberId);
     setSelectedPeriods([]);
+    setAnchorPeriodId(null);
+    setIsRangeMode(false);
   };
 
-  const togglePeriod = (periodId: number) => {
+  const handlePeriodChange = (periodId: number, periodIndex: number) => {
+    const anchorIndex = periods.findIndex(
+      (period) => period.id === anchorPeriodId,
+    );
+
+    if (isRangeMode && anchorIndex !== -1) {
+      const start = Math.min(anchorIndex, periodIndex);
+      const end = Math.max(anchorIndex, periodIndex);
+      const rangeIds = periods
+        .slice(start, end + 1)
+        .filter(
+          (period) => !paidPeriodKeys.has(paymentKey(memberId, period.id)),
+        )
+        .map((period) => period.id);
+
+      setSelectedPeriods((current) => [...new Set([...current, ...rangeIds])]);
+      setAnchorPeriodId(null);
+      setIsRangeMode(false);
+      return;
+    }
+
+    setAnchorPeriodId(periodId);
+    if (isRangeMode) {
+      setSelectedPeriods((current) =>
+        current.includes(periodId) ? current : [...current, periodId],
+      );
+      return;
+    }
+
     setSelectedPeriods((current) =>
       current.includes(periodId)
         ? current.filter((id) => id !== periodId)
@@ -57,6 +89,11 @@ const SemesterPaymentEntry: FC<Props> = ({
     setSelectedPeriods(
       allPeriodsSelected ? [] : unpaidPeriods.map((period) => period.id),
     );
+  };
+
+  const toggleRangeMode = () => {
+    setIsRangeMode((current) => !current);
+    setAnchorPeriodId(null);
   };
 
   const handleSubmit = async () => {
@@ -72,6 +109,8 @@ const SemesterPaymentEntry: FC<Props> = ({
     if (success) {
       setMemberId("");
       setSelectedPeriods([]);
+      setAnchorPeriodId(null);
+      setIsRangeMode(false);
     }
   };
 
@@ -127,19 +166,35 @@ const SemesterPaymentEntry: FC<Props> = ({
                 belum dibayar
               </p>
             </div>
-            <button
-              type="button"
-              onClick={toggleAllPeriods}
-              disabled={!memberId || unpaidPeriods.length === 0 || isSubmitting}
-              className="w-fit border-2 border-[#241a1a] bg-[#fffaf2] px-3 py-2 text-xs font-black shadow-[3px_3px_0_#241a1a] transition active:translate-x-0.75 active:translate-y-0.75 active:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {allPeriodsSelected ? "Batalkan semua" : "Pilih semua minggu"}
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={toggleAllPeriods}
+                disabled={
+                  !memberId || unpaidPeriods.length === 0 || isSubmitting
+                }
+                className="w-fit border-2 border-[#241a1a] bg-[#fffaf2] px-3 py-2 text-xs font-black shadow-[3px_3px_0_#241a1a] transition active:translate-x-0.75 active:translate-y-0.75 active:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {allPeriodsSelected ? "Batalkan semua" : "Pilih semua minggu"}
+              </button>
+              <button
+                type="button"
+                onClick={toggleRangeMode}
+                disabled={
+                  !memberId || unpaidPeriods.length === 0 || isSubmitting
+                }
+                className={`w-fit border-2 px-3 py-2 text-xs font-black shadow-[3px_3px_0_#241a1a] transition active:translate-x-0.75 active:translate-y-0.75 disabled:cursor-not-allowed disabled:opacity-50 ${isRangeMode ? "border-[#550000] bg-[#550000] text-[#fffaf2]" : "border-[#241a1a] bg-[#fffaf2]"}`}
+              >
+                {isRangeMode ? "Batal pilih rentang" : "Pilih rentang"}
+              </button>
+            </div>
           </div>
 
           <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
             {periods.map((period, index) => {
-              const isPaid = paidPeriodKeys.has(paymentKey(memberId, period.id));
+              const isPaid = paidPeriodKeys.has(
+                paymentKey(memberId, period.id),
+              );
               const isSelected = isPaid || selectedPeriods.includes(period.id);
               const periodClassName = isPaid
                 ? "cursor-not-allowed border-[#557348] bg-[#edf4e9]"
@@ -158,7 +213,8 @@ const SemesterPaymentEntry: FC<Props> = ({
                   <input
                     type="checkbox"
                     checked={isSelected}
-                    onChange={() => togglePeriod(period.id)}
+                    onChange={() => undefined}
+                    onClick={() => handlePeriodChange(period.id, index)}
                     disabled={isPaid || isSubmitting}
                     className="peer sr-only"
                   />
