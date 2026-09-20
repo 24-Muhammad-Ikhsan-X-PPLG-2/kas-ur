@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, UserRound } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { SubmitEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 type Member = {
@@ -21,7 +21,7 @@ const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
   const [isNavigating, setIsNavigating] = useState(false);
 
   // Mengarahkan anggota ke halaman kas berdasarkan ID, bukan nama.
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!selectedMemberId || isNavigating) return;
 
@@ -49,17 +49,9 @@ const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
               Kas XI <b className="text-[#550000]">PPLG 2</b>
             </span>
           </a>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <span className="hidden border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-1 text-[9px] font-black tracking-wider sm:inline-block">
-              2026 / 2027
-            </span>
-            <a
-              href="/login"
-              className="border-2 border-[#241a1a] bg-[#fffaf2] px-2.5 py-2 text-[10px] font-black shadow-[3px_3px_0_#241a1a] transition hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_#241a1a] focus-visible:outline-2 focus-visible:outline-[#550000] sm:px-3 sm:text-xs"
-            >
-              Login sebagai admin
-            </a>
-          </div>
+          <span className="hidden border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-1 text-[9px] font-black tracking-wider sm:inline-block">
+            2026 / 2027
+          </span>
         </div>
       </nav>
 
@@ -84,7 +76,7 @@ const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
         </section>
 
         <section
-          className="relative rounded-xl border-[3px] border-[#241a1a] bg-[#fffaf2] p-6 shadow-[8px_8px_0_#241a1a] sm:p-9 overflow-hidden"
+          className="relative rounded-xl border-[3px] border-[#241a1a] bg-[#fffaf2] p-6 shadow-[8px_8px_0_#241a1a] sm:p-9"
           aria-labelledby="member-picker-heading"
         >
           <div
