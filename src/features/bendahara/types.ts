@@ -7,6 +7,8 @@ export type Period = {
 
 export type PaymentRecord = {
   id: number;
+  memberId: string;
+  periodId: number;
   member: string;
   period: string;
   amount: string;

@@ -59,21 +59,21 @@ const ModalMemberPayment: FC<Props> = ({ member, onClose }) => {
     >
       {isLoading ? (
         <div
-          className="flex min-h-40 items-center justify-center gap-3 text-sm font-bold text-[#766d6e]"
+          className="flex min-h-40 items-center justify-center gap-3 text-sm font-bold text-[#6f6262]"
           role="status"
           aria-live="polite"
         >
           <LoaderCircle
             size={20}
-            className="animate-spin text-[#7a1f3d]"
+            className="animate-spin text-[#550000]"
             aria-hidden="true"
           />
           Memuat data tunggakan...
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border-[3px] border-[#171416]">
+        <div className="overflow-hidden rounded-lg border-[3px] border-[#241a1a]">
           <table className="w-full border-collapse text-left">
-            <thead className="border-b-[3px] border-[#171416] bg-[#e6c1cc] text-[10px] font-black uppercase tracking-wide">
+            <thead className="border-b-[3px] border-[#241a1a] bg-[#ead6d1] text-[10px] font-black uppercase tracking-wide">
               <tr>
                 <th className="w-16 px-4 py-3" scope="col">
                   No
@@ -88,9 +88,9 @@ const ModalMemberPayment: FC<Props> = ({ member, onClose }) => {
               {unpaidPeriods.map((period, index) => (
                 <tr
                   key={period.period_id}
-                  className="border-b-2 border-[#ded5ca] last:border-b-0"
+                  className="border-b-2 border-[#ddd0c7] last:border-b-0"
                 >
-                  <td className="px-4 py-3 text-[#766d6e]">{index + 1}</td>
+                  <td className="px-4 py-3 text-[#6f6262]">{index + 1}</td>
                   <th className="px-4 py-3 font-black" scope="row">
                     {getLabel(period.start_date, period.end_date)}
                   </th>

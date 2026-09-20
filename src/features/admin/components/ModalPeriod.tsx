@@ -54,7 +54,7 @@ const ModalPeriod: FC<Props> = ({
             <input
               id="start-date"
               type="date"
-              className="h-12 w-full rounded-md border-[3px] border-[#171416] bg-white px-3 text-sm outline-none focus:border-[#7a1f3d] focus:shadow-[4px_4px_0_#7a1f3d]"
+              className="h-12 w-full rounded-md border-[3px] border-[#241a1a] bg-white px-3 text-sm outline-none focus:border-[#550000] focus:shadow-[4px_4px_0_#550000]"
               {...periodForm.register("startDate")}
             />
             <FormError
@@ -71,7 +71,7 @@ const ModalPeriod: FC<Props> = ({
             <input
               id="end-date"
               type="date"
-              className="h-12 w-full rounded-md border-[3px] border-[#171416] bg-white px-3 text-sm outline-none focus:border-[#7a1f3d] focus:shadow-[4px_4px_0_#7a1f3d]"
+              className="h-12 w-full rounded-md border-[3px] border-[#241a1a] bg-white px-3 text-sm outline-none focus:border-[#550000] focus:shadow-[4px_4px_0_#550000]"
               {...periodForm.register("endDate")}
             />
             <FormError message={periodForm.formState.errors.endDate?.message} />
@@ -85,13 +85,13 @@ const ModalPeriod: FC<Props> = ({
             Nominal
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-black text-[#7a1f3d]">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-black text-[#550000]">
               Rp
             </span>
             <input
               id="period-amount"
               type="number"
-              className="h-12 w-full rounded-md border-[3px] border-[#171416] bg-white pl-10 pr-3 text-sm font-bold outline-none focus:border-[#7a1f3d] focus:shadow-[4px_4px_0_#7a1f3d]"
+              className="h-12 w-full rounded-md border-[3px] border-[#241a1a] bg-white pl-10 pr-3 text-sm font-bold outline-none focus:border-[#550000] focus:shadow-[4px_4px_0_#550000]"
               {...periodForm.register("amount")}
             />
           </div>
@@ -101,14 +101,14 @@ const ModalPeriod: FC<Props> = ({
           <button
             type="button"
             onClick={() => setModal(null)}
-            className="min-h-11 rounded-md border-[3px] border-[#171416] px-4 text-sm font-black"
+            className="min-h-11 rounded-md border-[3px] border-[#241a1a] px-4 text-sm font-black"
           >
             Batal
           </button>
           <button
             type="submit"
             disabled={periodForm.formState.isSubmitting}
-            className="min-h-11 rounded-md border-[3px] border-[#171416] bg-[#7a1f3d] px-4 text-sm font-black text-[#fffaf3] shadow-[4px_4px_0_#171416] disabled:cursor-wait disabled:opacity-70"
+            className="min-h-11 rounded-md border-[3px] border-[#241a1a] bg-[#550000] px-4 text-sm font-black text-[#fffaf2] shadow-[4px_4px_0_#241a1a] disabled:cursor-wait disabled:opacity-70"
           >
             {periodForm.formState.isSubmitting
               ? "Menyimpan..."

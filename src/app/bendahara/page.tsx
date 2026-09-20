@@ -75,6 +75,8 @@ const BendaharaPage = async () => {
   const paymentsRecord: PaymentRecord[] =
     dataCashPayments?.map((item) => ({
       id: item.id,
+      memberId: item.member_id,
+      periodId: item.period_id,
       amount: item.amount,
       period: getShortLabel(
         item.cash_periods.start_date,

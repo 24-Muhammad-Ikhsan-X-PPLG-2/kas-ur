@@ -23,12 +23,12 @@ const PaymentEntryForm: FC<Props> = ({ members, periods, form, onSubmit }) => {
 
   return (
     <section
-      className="mt-12 max-w-3xl rounded-xl border-[3px] border-[#171416] bg-[#fffdf8] p-6 shadow-[8px_8px_0_#171416] sm:p-9"
+      className="mt-12 max-w-3xl rounded-xl border-[3px] border-[#241a1a] bg-[#fffaf2] p-6 shadow-[8px_8px_0_#241a1a] sm:p-9"
       aria-labelledby="form-heading"
     >
       <div className="mb-7 flex items-start justify-between gap-4">
         <div>
-          <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#7a1f3d]">
+          <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-[#550000]">
             Payment desk
           </p>
           <h2
@@ -37,11 +37,11 @@ const PaymentEntryForm: FC<Props> = ({ members, periods, form, onSubmit }) => {
           >
             Catat Pembayaran
           </h2>
-          <p className="mt-2 text-sm text-[#766d6e]">
+          <p className="mt-2 text-sm text-[#6f6262]">
             Masukkan pembayaran kas anggota yang sudah diterima.
           </p>
         </div>
-        <span className="hidden rounded-md border-2 border-[#171416] bg-[#e6c1cc] p-2 text-[#7a1f3d] sm:block">
+        <span className="hidden rounded-md border-2 border-[#241a1a] bg-[#ead6d1] p-2 text-[#550000] sm:block">
           <Plus size={20} aria-hidden="true" />
         </span>
       </div>
@@ -96,11 +96,11 @@ const PaymentEntryForm: FC<Props> = ({ members, periods, form, onSubmit }) => {
             <input
               id="paidAt"
               type="date"
-              className={`h-12 w-full rounded-md border-[3px] border-[#171416] bg-white px-3 text-sm outline-none focus:border-[#7a1f3d] focus:shadow-[4px_4px_0_#7a1f3d] ${errors.paidAt ? "border-[#59142e]" : ""}`}
+              className={`h-12 w-full rounded-md border-[3px] border-[#241a1a] bg-white px-3 text-sm outline-none focus:border-[#550000] focus:shadow-[4px_4px_0_#550000] ${errors.paidAt ? "border-[#3d0000]" : ""}`}
               {...register("paidAt")}
             />
             {errors.paidAt && (
-              <p className="mt-1.5 text-xs font-bold text-[#59142e]">
+              <p className="mt-1.5 text-xs font-bold text-[#3d0000]">
                 ! {errors.paidAt.message}
               </p>
             )}
@@ -108,13 +108,13 @@ const PaymentEntryForm: FC<Props> = ({ members, periods, form, onSubmit }) => {
           <div>
             <label htmlFor="note" className="mb-2 block text-sm font-extrabold">
               Catatan{" "}
-              <span className="font-normal text-[#766d6e]">(opsional)</span>
+              <span className="font-normal text-[#6f6262]">(opsional)</span>
             </label>
             <textarea
               id="note"
               rows={2}
               placeholder="Contoh: Bayar langsung ke bendahara"
-              className="w-full resize-none rounded-md border-[3px] border-[#171416] bg-white px-3 py-2 text-sm outline-none focus:border-[#7a1f3d] focus:shadow-[4px_4px_0_#7a1f3d]"
+              className="w-full resize-none rounded-md border-[3px] border-[#241a1a] bg-white px-3 py-2 text-sm outline-none focus:border-[#550000] focus:shadow-[4px_4px_0_#550000]"
               {...register("note")}
             />
           </div>
@@ -122,7 +122,7 @@ const PaymentEntryForm: FC<Props> = ({ members, periods, form, onSubmit }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="mt-2 flex min-h-14 items-center justify-center gap-2 rounded-md border-[3px] border-[#171416] bg-[#7a1f3d] font-black text-[#fffaf3] shadow-[6px_6px_0_#171416] transition hover:translate-x-0.75 hover:translate-y-0.75 hover:shadow-[3px_3px_0_#171416] active:translate-x-1.5 active:translate-y-1.5 active:shadow-none disabled:cursor-wait disabled:opacity-75 focus-visible:outline-3 focus-visible:outline-[#7a1f3d]"
+          className="mt-2 flex min-h-14 items-center justify-center gap-2 rounded-md border-[3px] border-[#241a1a] bg-[#550000] font-black text-[#fffaf2] shadow-[6px_6px_0_#241a1a] transition hover:translate-x-0.75 hover:translate-y-0.75 hover:shadow-[3px_3px_0_#241a1a] active:translate-x-1.5 active:translate-y-1.5 active:shadow-none disabled:cursor-wait disabled:opacity-75 focus-visible:outline-3 focus-visible:outline-[#550000]"
         >
           <Check size={18} aria-hidden="true" />
           {isSubmitting ? "Menyimpan..." : "Catat Pembayaran"}

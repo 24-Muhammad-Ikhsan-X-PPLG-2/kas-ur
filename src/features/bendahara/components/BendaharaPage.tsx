@@ -36,7 +36,7 @@ const BendaharaPage: FC<Props> = ({
   onSubmit,
   onSubmitSemester,
 }) => (
-  <main className="min-h-screen overflow-x-hidden bg-[#f8f2e8] text-[#171416]">
+  <main className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#241a1a]">
     <BendaharaNavbar />
     <div className="mx-auto max-w-300 px-5 pb-16 pt-12 sm:px-8 sm:pt-16 lg:px-10">
       <BendaharaHeader />
@@ -70,10 +70,10 @@ const BendaharaPage: FC<Props> = ({
       <PaymentHistory recentPayments={recentPayments} />
       <MemberPaymentStatus member={members} />
 
-      <div className="mt-10 flex items-center gap-3 border-2 border-dashed border-[#b9aaa1] p-4 text-sm text-[#766d6e]">
+      <div className="mt-10 flex items-center gap-3 border-2 border-dashed border-[#b8a49d] p-4 text-sm text-[#6f6262]">
         <Info
           size={18}
-          className="shrink-0 text-[#7a1f3d]"
+          className="shrink-0 text-[#550000]"
           aria-hidden="true"
         />
         <span>

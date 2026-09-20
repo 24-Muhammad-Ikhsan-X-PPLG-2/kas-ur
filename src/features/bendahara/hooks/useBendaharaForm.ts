@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { supabase } from "@/supabase/client";
+import { money } from "@/utils/client";
 import { PaymentFormValues, paymentSchema } from "../schema";
 import { Member, PaymentRecord, Period, SummaryData } from "../types";
 
@@ -30,11 +31,45 @@ function getNowDate(): string {
   return `${tahun}-${bulan}-${tanggal}`;
 }
 
+function isSamePayment(
+  payment: PaymentRecord,
+  memberId: string,
+  periodId: number,
+) {
+  return (
+    String(payment.memberId) === String(memberId) &&
+    Number(payment.periodId) === Number(periodId)
+  );
+}
+
+function getSummary(
+  payments: PaymentRecord[],
+  memberCount: number,
+): SummaryData {
+  const today = getNowDate();
+  const paidMemberIds = new Set(
+    payments.map((payment) => String(payment.memberId)),
+  );
+  const totalCash = payments.reduce(
+    (total, payment) =>
+      total + Number(String(payment.amount).replace(/[^0-9]/g, "")),
+    0,
+  );
+
+  return {
+    paymentsToday: payments
+      .filter((payment) => payment.date.slice(0, 10) === today)
+      .length.toString(),
+    paidMembers: paidMemberIds.size.toString(),
+    unpaidMembers: Math.max(memberCount - paidMemberIds.size, 0).toString(),
+    totalCash: money(totalCash),
+  };
+}
+
 export const useBendaharaForm = ({
   periodsFromServer,
   memberFromServer,
   paymentsRecord,
-  summary,
 }: UseBendaharaFormProps) => {
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -45,6 +80,7 @@ export const useBendaharaForm = ({
   const [members] = useState<Member[]>(memberFromServer);
   const [recentPayments, setRecentPayments] =
     useState<PaymentRecord[]>(paymentsRecord);
+  const summary = getSummary(recentPayments, members.length);
 
   const onSubmit = async (data: PaymentFormValues) => {
     const toastId = toast.loading("Bentaran...");
@@ -108,22 +144,22 @@ export const useBendaharaForm = ({
         autoClose: 3000,
         type: "success",
       });
-      const member = members.find((item) => item.id === data.memberId);
+      const member = members.find(
+        (item) => String(item.id) === String(data.memberId),
+      );
       const period = periods.find((item) => item.id === Number(data.periodId));
       if (member && period) {
         setRecentPayments((current) => [
           ...current.filter(
-            (payment) =>
-              !(
-                payment.member === member.name &&
-                payment.period === period.shortLabel
-              ),
+            (payment) => !isSamePayment(payment, member.id, period.id),
           ),
           {
             id: Date.now(),
+            memberId: String(member.id),
+            periodId: period.id,
             member: member.name,
             period: period.shortLabel,
-            amount: period.amount,
+            amount: money(Number(data.amount)),
             date: data.paidAt,
           },
         ]);
@@ -203,20 +239,22 @@ export const useBendaharaForm = ({
         autoClose: 3000,
         type: "success",
       });
-      const member = members.find((item) => item.id === memberId);
+      const member = members.find(
+        (item) => String(item.id) === String(memberId),
+      );
       const paidAt = new Date().toISOString();
       if (member) {
         setRecentPayments((current) => [
           ...current.filter(
             (payment) =>
-              !selectedPeriods.some(
-                (period) =>
-                  payment.member === member.name &&
-                  payment.period === period.shortLabel,
+              !selectedPeriods.some((period) =>
+                isSamePayment(payment, member.id, period.id),
               ),
           ),
           ...selectedPeriods.map((period, index) => ({
             id: Date.now() + index,
+            memberId: String(member.id),
+            periodId: period.id,
             member: member.name,
             period: period.shortLabel,
             amount: period.amount,

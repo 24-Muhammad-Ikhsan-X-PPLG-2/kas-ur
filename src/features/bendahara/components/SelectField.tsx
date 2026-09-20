@@ -18,12 +18,12 @@ const SelectField = ({
     </label>
     <select
       {...props}
-      className={`h-12 w-full rounded-md border-[3px] border-[#171416] bg-white px-3 text-sm outline-none focus:border-[#7a1f3d] focus:shadow-[4px_4px_0_#7a1f3d] ${error ? "border-[#59142e] bg-[#fff2f4]" : ""}`}
+      className={`h-12 w-full rounded-md border-[3px] border-[#241a1a] bg-white px-3 text-sm outline-none focus:border-[#550000] focus:shadow-[4px_4px_0_#550000] ${error ? "border-[#3d0000] bg-[#fff2f4]" : ""}`}
     >
       {children}
     </select>
     {error && (
-      <p className="mt-1.5 text-xs font-bold text-[#59142e]">! {error}</p>
+      <p className="mt-1.5 text-xs font-bold text-[#3d0000]">! {error}</p>
     )}
   </div>
 );

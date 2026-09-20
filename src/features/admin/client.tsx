@@ -232,24 +232,24 @@ const AdminClient: FC<AdminClientProps> = ({
   };
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f8f2e8] text-[#171416]">
+    <main className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#241a1a]">
       <Nav />
       <div className="mx-auto max-w-[1200px] px-5 pb-16 pt-12 sm:px-8 sm:pt-16 lg:px-10">
         <header className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#7a1f3d]">
+            <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.13em] text-[#550000]">
               XI PPLG 2 / Admin
             </p>
             <h1 className="text-[2.9rem] font-black leading-[.92] tracking-[-.08em] sm:text-6xl">
               Atur kas
               <br />
-              <span className="text-[#7a1f3d]">kelas.</span>
+              <span className="text-[#550000]">kelas.</span>
             </h1>
-            <p className="mt-5 max-w-lg text-base text-[#766d6e] sm:text-lg">
+            <p className="mt-5 max-w-lg text-base text-[#6f6262] sm:text-lg">
               Kelola nominal pembayaran dan periode kas XI PPLG 2.
             </p>
           </div>
-          <span className="w-fit -rotate-2 border-2 border-[#171416] bg-[#171416] px-3 py-2 font-mono text-xs font-bold text-[#bce2a7] shadow-[4px_4px_0_#171416]">
+          <span className="w-fit -rotate-2 border-2 border-[#241a1a] bg-[#241a1a] px-3 py-2 font-mono text-xs font-bold text-[#d6e7b8] shadow-[4px_4px_0_#241a1a]">
             // CASH CONFIGURATION
           </span>
         </header>
@@ -264,13 +264,13 @@ const AdminClient: FC<AdminClientProps> = ({
 
         <SystemNote />
       </div>
-      <footer className="border-t-[3px] border-[#171416] px-5 py-6 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-2 text-xs font-bold text-[#766d6e] sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-sm font-black text-[#171416]">
-            Kas XI <b className="text-[#7a1f3d]">PPLG 2</b>
+      <footer className="border-t-[3px] border-[#241a1a] px-5 py-6 sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-2 text-xs font-bold text-[#6f6262] sm:flex-row sm:items-center sm:justify-between">
+          <span className="text-sm font-black text-[#241a1a]">
+            Kas XI <b className="text-[#550000]">PPLG 2</b>
           </span>
           <span>© 2026 XI PPLG 2</span>
-          <span className="font-mono text-[#7a1f3d]">// system settings</span>
+          <span className="font-mono text-[#550000]">// system settings</span>
         </div>
       </footer>
       {modal === "config" && (
