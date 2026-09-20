@@ -10,28 +10,25 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+type PaymentScheduleItem = {
+  id: number;
+  period: string;
+  amount: string;
+  status: "Sudah lunas" | "Belum lunas";
+};
+
+type NextPayment = {
+  amount: string;
+  dueDate: string;
+  period: string;
+};
+
 type KasClientProps = {
   username: string;
+  weeklyAmount: string;
+  nextPayment: NextPayment | null;
+  paymentSchedule: PaymentScheduleItem[];
 };
-
-const paymentInfo = {
-  amount: 5000,
-  period: "15 – 21 September 2026",
-  dueDate: "21 September 2026",
-};
-
-const paymentSchedule = [
-  { period: "15 – 21 Sep 2026", amount: "Rp5.000" },
-  { period: "22 – 28 Sep 2026", amount: "Rp5.000" },
-  { period: "29 Sep – 5 Okt 2026", amount: "Rp5.000" },
-];
-
-const formatAmount = (amount: number) =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(amount);
 
 const QrPlaceholder = () => {
   const pattern = [
@@ -78,26 +75,42 @@ const QrPlaceholder = () => {
 type ScheduleItemProps = {
   period: string;
   amount: string;
+  status: PaymentScheduleItem["status"];
 };
 
-const ScheduleItem = ({ period, amount }: ScheduleItemProps) => (
-  <article className="rounded-lg border-[3px] border-[#241a1a] bg-[#fffaf2] p-4 shadow-[5px_5px_0_#241a1a]">
-    <div className="mb-5 flex items-start justify-between gap-3">
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border-2 border-[#241a1a] bg-[#ead6d1] text-[#550000]">
-        <CalendarDays size={18} strokeWidth={2.5} aria-hidden="true" />
-      </span>
-      <span className="border-2 border-[#550000] px-2 py-1 text-[10px] font-black uppercase tracking-wide text-[#550000]">
-        Belum dibayar
-      </span>
-    </div>
-    <p className="text-sm font-extrabold">{period}</p>
-    <p className="mt-2 text-xl font-black tracking-tight text-[#550000]">
-      {amount}
-    </p>
-  </article>
-);
+// Menampilkan satu periode beserta status pembayaran aktualnya.
+const ScheduleItem = ({ period, amount, status }: ScheduleItemProps) => {
+  const isPaid = status === "Sudah lunas";
+  const statusClassName = isPaid
+    ? "border-[#3f6b4a] text-[#3f6b4a]"
+    : "border-[#550000] text-[#550000]";
 
-const KasClient = ({ username }: KasClientProps) => {
+  return (
+    <article className="rounded-lg border-[3px] border-[#241a1a] bg-[#fffaf2] p-4 shadow-[5px_5px_0_#241a1a]">
+      <div className="mb-5 flex items-start justify-between gap-3">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-md border-2 border-[#241a1a] bg-[#ead6d1] text-[#550000]">
+          <CalendarDays size={18} strokeWidth={2.5} aria-hidden="true" />
+        </span>
+        <span
+          className={`border-2 px-2 py-1 text-[10px] font-black uppercase tracking-wide ${statusClassName}`}
+        >
+          {status}
+        </span>
+      </div>
+      <p className="text-sm font-extrabold">{period}</p>
+      <p className="mt-2 text-xl font-black tracking-tight text-[#550000]">
+        {amount}
+      </p>
+    </article>
+  );
+};
+
+const KasClient = ({
+  username,
+  weeklyAmount,
+  nextPayment,
+  paymentSchedule,
+}: KasClientProps) => {
   const router = useRouter();
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#241a1a]">
@@ -171,23 +184,24 @@ const KasClient = ({ username }: KasClientProps) => {
                   className="font-mono text-xs font-black uppercase tracking-[0.12em] text-[#6f6262]"
                   id="next-payment-heading"
                 >
-                  Baru Bayar
+                  {nextPayment ? "Pembayaran berikutnya" : "Status pembayaran"}
                 </p>
                 <span className="bg-[#550000] px-2.5 py-1.5 text-[10px] font-black uppercase tracking-wide text-[#fffaf2]">
-                  Rp. 3000
+                  {nextPayment ? "Belum lunas" : "Semua lunas"}
                 </span>
               </div>
               <p className="text-[4rem] font-black leading-none tracking-[-0.09em] text-[#550000] sm:text-7xl">
-                {formatAmount(2000)}
+                {nextPayment?.amount ?? "Lunas"}
               </p>
               <div className="mt-7 flex flex-wrap gap-4 text-sm font-bold sm:gap-7">
-                {/* <span className="flex items-center gap-2">
-                  <CalendarDays size={18} aria-hidden="true" />
-                  {paymentInfo.period}
-                </span> */}
+                {nextPayment && (
+                  <span className="flex items-center gap-2">
+                    <CalendarDays size={18} aria-hidden="true" />
+                    {nextPayment.period}
+                  </span>
+                )}
                 <span className="flex items-center gap-2">
-                  <WalletCards size={18} aria-hidden="true" />
-                  Kas kelas
+                  <WalletCards size={18} aria-hidden="true" /> Kas kelas
                 </span>
               </div>
             </div>
@@ -195,7 +209,9 @@ const KasClient = ({ username }: KasClientProps) => {
               <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide">
                 <Clock3 size={16} aria-hidden="true" /> Batas pembayaran
               </p>
-              <p className="mt-2 text-lg font-black">{paymentInfo.dueDate}</p>
+              <p className="mt-2 text-lg font-black">
+                {nextPayment?.dueDate ?? "Tidak ada tunggakan"}
+              </p>
               <p className="mt-3 text-sm leading-relaxed text-[#6f6262]">
                 Yuk, jangan sampai lupa bayar kas minggu ini.
               </p>
@@ -217,7 +233,7 @@ const KasClient = ({ username }: KasClientProps) => {
               </h2>
             </div>
             <span className="hidden font-mono text-xs text-[#6f6262] sm:block">
-              03 periode terdekat
+              {paymentSchedule.length} periode
             </span>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
@@ -245,7 +261,7 @@ const KasClient = ({ username }: KasClientProps) => {
               Scan QRIS berikut menggunakan aplikasi pembayaran kamu.
             </p>
             <p className="mt-8 text-2xl font-black">
-              Rp5.000{" "}
+              {weeklyAmount}{" "}
               <span className="text-sm font-bold text-[#e7b8b0]">/ minggu</span>
             </p>
             <p className="mt-1 text-sm font-bold">Kas XI PPLG 2</p>
