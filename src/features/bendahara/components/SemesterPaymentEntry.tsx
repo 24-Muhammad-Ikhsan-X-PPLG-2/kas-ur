@@ -1,7 +1,9 @@
 "use client";
 
-import { Check, Layers3 } from "lucide-react";
+import { Layers3 } from "lucide-react";
 import { FC, useState } from "react";
+import PeriodControls from "./PeriodControls";
+import PeriodOption from "./PeriodOption";
 import SelectField from "./SelectField";
 import { Member, PaymentRecord, Period } from "../types";
 
@@ -15,9 +17,11 @@ type Props = {
   }) => Promise<boolean>;
 };
 
+// Membuat key stabil untuk mencocokkan anggota dan periode pembayaran.
 const paymentKey = (memberId: string | number, periodId: string | number) =>
   `${String(memberId)}:${Number(periodId)}`;
 
+// Menampilkan form pembayaran beberapa periode sekaligus.
 const SemesterPaymentEntry: FC<Props> = ({
   members,
   periods,
@@ -42,6 +46,7 @@ const SemesterPaymentEntry: FC<Props> = ({
     unpaidPeriods.length > 0 &&
     unpaidPeriods.every((period) => selectedPeriods.includes(period.id));
 
+  // Mengganti anggota sekaligus membersihkan pilihan periode sebelumnya.
   const handleMemberChange = (nextMemberId: string) => {
     setMemberId(nextMemberId);
     setSelectedPeriods([]);
@@ -49,6 +54,7 @@ const SemesterPaymentEntry: FC<Props> = ({
     setIsRangeMode(false);
   };
 
+  // Memilih atau membatalkan satu periode, termasuk pilihan rentang.
   const handlePeriodChange = (periodId: number, periodIndex: number) => {
     const anchorIndex = periods.findIndex(
       (period) => period.id === anchorPeriodId,
@@ -85,17 +91,20 @@ const SemesterPaymentEntry: FC<Props> = ({
     );
   };
 
+  // Memilih semua periode yang belum dibayar atau membatalkan semuanya.
   const toggleAllPeriods = () => {
     setSelectedPeriods(
       allPeriodsSelected ? [] : unpaidPeriods.map((period) => period.id),
     );
   };
 
+  // Mengaktifkan mode pemilihan rentang dari periode awal ke periode akhir.
   const toggleRangeMode = () => {
     setIsRangeMode((current) => !current);
     setAnchorPeriodId(null);
   };
 
+  // Menyimpan seluruh periode terpilih melalui callback parent.
   const handleSubmit = async () => {
     if (!memberId || selectedPeriods.length === 0 || isSubmitting) return;
 
@@ -166,28 +175,15 @@ const SemesterPaymentEntry: FC<Props> = ({
                 belum dibayar
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={toggleAllPeriods}
-                disabled={
-                  !memberId || unpaidPeriods.length === 0 || isSubmitting
-                }
-                className="w-fit border-2 border-[#241a1a] bg-[#fffaf2] px-3 py-2 text-xs font-black shadow-[3px_3px_0_#241a1a] transition active:translate-x-0.75 active:translate-y-0.75 active:shadow-none disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {allPeriodsSelected ? "Batalkan semua" : "Pilih semua minggu"}
-              </button>
-              <button
-                type="button"
-                onClick={toggleRangeMode}
-                disabled={
-                  !memberId || unpaidPeriods.length === 0 || isSubmitting
-                }
-                className={`w-fit border-2 px-3 py-2 text-xs font-black shadow-[3px_3px_0_#241a1a] transition active:translate-x-0.75 active:translate-y-0.75 disabled:cursor-not-allowed disabled:opacity-50 ${isRangeMode ? "border-[#550000] bg-[#550000] text-[#fffaf2]" : "border-[#241a1a] bg-[#fffaf2]"}`}
-              >
-                {isRangeMode ? "Batal pilih rentang" : "Pilih rentang"}
-              </button>
-            </div>
+            <PeriodControls
+              allPeriodsSelected={allPeriodsSelected}
+              isRangeMode={isRangeMode}
+              isDisabled={
+                !memberId || unpaidPeriods.length === 0 || isSubmitting
+              }
+              onToggleAll={toggleAllPeriods}
+              onToggleRange={toggleRangeMode}
+            />
           </div>
 
           <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
@@ -195,43 +191,17 @@ const SemesterPaymentEntry: FC<Props> = ({
               const isPaid = paidPeriodKeys.has(
                 paymentKey(memberId, period.id),
               );
-              const isSelected = isPaid || selectedPeriods.includes(period.id);
-              const periodClassName = isPaid
-                ? "cursor-not-allowed border-[#557348] bg-[#edf4e9]"
-                : isSelected
-                  ? "cursor-pointer border-[#550000] bg-[#f4e4df]"
-                  : "cursor-pointer border-[#ddd0c7] bg-[#fffaf2] hover:border-[#241a1a]";
-              const checkboxClassName = isPaid
-                ? "border-[#557348] bg-[#557348]"
-                : "peer-checked:bg-[#550000]";
 
               return (
-                <label
+                <PeriodOption
                   key={period.id}
-                  className={`flex items-start gap-3 rounded-md border-2 p-3 transition ${periodClassName}`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => undefined}
-                    onClick={() => handlePeriodChange(period.id, index)}
-                    disabled={isPaid || isSubmitting}
-                    className="peer sr-only"
-                  />
-                  <span
-                    className={`grid h-5 w-5 shrink-0 place-items-center border-2 border-[#241a1a] bg-white text-transparent peer-checked:text-white ${checkboxClassName}`}
-                  >
-                    <Check size={13} strokeWidth={3} aria-hidden="true" />
-                  </span>
-                  <span>
-                    <span className="block text-xs font-black">
-                      Minggu {index + 1}
-                    </span>
-                    <span className="mt-1 block text-xs text-[#6f6262]">
-                      {isPaid ? "Sudah bayar" : period.label}
-                    </span>
-                  </span>
-                </label>
+                  period={period}
+                  index={index}
+                  isPaid={isPaid}
+                  isSelected={isPaid || selectedPeriods.includes(period.id)}
+                  isSubmitting={isSubmitting}
+                  onSelect={handlePeriodChange}
+                />
               );
             })}
           </div>
