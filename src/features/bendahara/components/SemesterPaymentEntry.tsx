@@ -15,6 +15,9 @@ type Props = {
   }) => Promise<boolean>;
 };
 
+const paymentKey = (memberId: string | number, periodId: string | number) =>
+  `${String(memberId)}:${Number(periodId)}`;
+
 const SemesterPaymentEntry: FC<Props> = ({
   members,
   periods,
@@ -25,23 +28,17 @@ const SemesterPaymentEntry: FC<Props> = ({
   const [selectedPeriods, setSelectedPeriods] = useState<number[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const selectedMember = members.find(
-    (member) => String(member.id) === String(memberId),
+  const paidPeriodKeys = new Set(
+    recentPayments.map((payment) =>
+      paymentKey(payment.memberId, payment.periodId),
+    ),
   );
-  const paidPeriodIds = periods
-    .filter((period) =>
-      recentPayments.some(
-        (payment) =>
-          String(payment.memberId) === String(selectedMember?.id) &&
-          Number(payment.periodId) === Number(period.id),
-      ),
-    )
-    .map((period) => period.id);
   const unpaidPeriods = periods.filter(
-    (period) => !paidPeriodIds.includes(period.id),
+    (period) => !paidPeriodKeys.has(paymentKey(memberId, period.id)),
   );
   const allPeriodsSelected =
-    unpaidPeriods.length > 0 && selectedPeriods.length === unpaidPeriods.length;
+    unpaidPeriods.length > 0 &&
+    unpaidPeriods.every((period) => selectedPeriods.includes(period.id));
 
   const handleMemberChange = (nextMemberId: string) => {
     setMemberId(nextMemberId);
@@ -142,13 +139,21 @@ const SemesterPaymentEntry: FC<Props> = ({
 
           <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
             {periods.map((period, index) => {
-              const isPaid = paidPeriodIds.includes(period.id);
+              const isPaid = paidPeriodKeys.has(paymentKey(memberId, period.id));
               const isSelected = isPaid || selectedPeriods.includes(period.id);
+              const periodClassName = isPaid
+                ? "cursor-not-allowed border-[#557348] bg-[#edf4e9]"
+                : isSelected
+                  ? "cursor-pointer border-[#550000] bg-[#f4e4df]"
+                  : "cursor-pointer border-[#ddd0c7] bg-[#fffaf2] hover:border-[#241a1a]";
+              const checkboxClassName = isPaid
+                ? "border-[#557348] bg-[#557348]"
+                : "peer-checked:bg-[#550000]";
 
               return (
                 <label
                   key={period.id}
-                  className={`flex items-start gap-3 rounded-md border-2 p-3 transition ${isPaid ? "cursor-not-allowed border-[#557348] bg-[#edf4e9]" : isSelected ? "cursor-pointer border-[#550000] bg-[#f4e4df]" : "cursor-pointer border-[#ddd0c7] bg-[#fffaf2] hover:border-[#241a1a]"}`}
+                  className={`flex items-start gap-3 rounded-md border-2 p-3 transition ${periodClassName}`}
                 >
                   <input
                     type="checkbox"
@@ -158,7 +163,7 @@ const SemesterPaymentEntry: FC<Props> = ({
                     className="peer sr-only"
                   />
                   <span
-                    className={`grid h-5 w-5 shrink-0 place-items-center border-2 border-[#241a1a] bg-white text-transparent peer-checked:text-white ${isPaid ? "border-[#557348] bg-[#557348]" : "peer-checked:bg-[#550000]"}`}
+                    className={`grid h-5 w-5 shrink-0 place-items-center border-2 border-[#241a1a] bg-white text-transparent peer-checked:text-white ${checkboxClassName}`}
                   >
                     <Check size={13} strokeWidth={3} aria-hidden="true" />
                   </span>
