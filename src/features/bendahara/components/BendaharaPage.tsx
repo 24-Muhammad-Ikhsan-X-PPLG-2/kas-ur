@@ -73,7 +73,7 @@ const BendaharaPage: FC<Props> = ({
         onSubmitSemester={onSubmitSemester}
       />
       <PaymentHistory recentPayments={recentPayments} />
-      <MemberPaymentStatus member={members} />
+      <MemberPaymentStatus member={members} periods={periods} />
 
       <div className="mt-10 flex items-center gap-3 border-2 border-dashed border-[#b8a49d] p-4 text-sm text-[#6f6262]">
         <Info
