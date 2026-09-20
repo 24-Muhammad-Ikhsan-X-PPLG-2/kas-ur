@@ -8,6 +8,11 @@ import {
   UserRound,
   WalletCards,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+type KasClientProps = {
+  username: string;
+};
 
 const paymentInfo = {
   amount: 5000,
@@ -92,7 +97,8 @@ const ScheduleItem = ({ period, amount }: ScheduleItemProps) => (
   </article>
 );
 
-const KasClient = () => {
+const KasClient = ({ username }: KasClientProps) => {
+  const router = useRouter();
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#241a1a]">
       <nav className="border-b-[3px] border-[#241a1a] bg-[#f7f1e8] px-5 py-4 sm:px-8 lg:px-12">
@@ -115,12 +121,13 @@ const KasClient = () => {
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2 text-sm font-bold">
               <UserRound size={19} strokeWidth={2.5} aria-hidden="true" />
-              <span>Ikhsan</span>
+              <span>{username}</span>
             </div>
             <button
               type="button"
               className="flex min-h-10 items-center gap-2 rounded-md border-2 border-[#241a1a] bg-[#fffaf2] px-3 text-xs font-black shadow-[3px_3px_0_#241a1a] transition hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_#241a1a] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none focus-visible:outline focus-visible:outline-3 focus-visible:outline-[#550000]"
               aria-label="Keluar dari akun"
+              onClick={() => router.push("/")}
             >
               <LogOut size={16} strokeWidth={2.5} aria-hidden="true" />
               <span className="hidden sm:inline">Keluar</span>

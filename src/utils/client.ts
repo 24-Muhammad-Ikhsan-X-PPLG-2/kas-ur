@@ -1,4 +1,7 @@
 import { CashPeriod } from "@/features/admin/type";
+import { supabase } from "@/supabase/client";
+import { ProfileType } from "@/types/profile";
+import { PostgrestMaybeSingleResponse } from "@supabase/supabase-js";
 
 export function formatTime(date: string) {
   const formatted = new Intl.DateTimeFormat("id-ID", {
@@ -53,4 +56,17 @@ export function getBillingStatus(
   }
 
   return "tagih sekarang";
+}
+
+export async function getProfile() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data } = (await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .maybeSingle()) as PostgrestMaybeSingleResponse<ProfileType>;
+  return data;
 }

@@ -10,7 +10,7 @@ export type { Member, PaymentRecord, Period, SummaryData } from "./types";
 const BendaharaClient: FC<BendaharaClientProps> = (props) => {
   const bendaharaForm = useBendaharaForm(props);
 
-  return <BendaharaPage {...bendaharaForm} />;
+  return <BendaharaPage {...bendaharaForm} username={props.username} />;
 };
 
 export default BendaharaClient;

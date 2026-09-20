@@ -146,6 +146,7 @@ const BendaharaPage = async () => {
       memberFromServer={members}
       periodsFromServer={periods}
       summary={summary}
+      username={user.username}
     />
   );
 };

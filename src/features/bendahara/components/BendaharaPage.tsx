@@ -25,6 +25,7 @@ type Props = {
     memberId: string;
     periods: Period[];
   }) => Promise<boolean>;
+  username: string;
 };
 
 const BendaharaPage: FC<Props> = ({
@@ -35,12 +36,13 @@ const BendaharaPage: FC<Props> = ({
   form,
   onSubmit,
   onSubmitSemester,
+  username,
 }) => (
   <main
     className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#241a1a]"
     suppressHydrationWarning
   >
-    <BendaharaNavbar />
+    <BendaharaNavbar username={username} />
     <div className="mx-auto max-w-300 px-5 pb-16 pt-12 sm:px-8 sm:pt-16 lg:px-10">
       <BendaharaHeader />
 

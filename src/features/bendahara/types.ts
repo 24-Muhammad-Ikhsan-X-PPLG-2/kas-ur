@@ -32,4 +32,5 @@ export type BendaharaClientProps = {
   memberFromServer: Member[];
   paymentsRecord: PaymentRecord[];
   summary: SummaryData;
+  username: string;
 };

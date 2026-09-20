@@ -58,11 +58,13 @@ import { generateNumber } from "@/utils/client";
 type AdminClientProps = {
   cashConfig: CashConfig;
   periods: CashPeriod[];
+  username: string;
 };
 
 const AdminClient: FC<AdminClientProps> = ({
   cashConfig,
   periods: periodsServer,
+  username,
 }) => {
   const [periods, setPeriods] = useState<CashPeriod[]>(periodsServer);
   const [config, setConfig] = useState<CashConfig>(cashConfig);
@@ -233,7 +235,7 @@ const AdminClient: FC<AdminClientProps> = ({
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f7f1e8] text-[#241a1a]">
-      <Nav />
+      <Nav username={username} />
       <div className="mx-auto max-w-[1200px] px-5 pb-16 pt-12 sm:px-8 sm:pt-16 lg:px-10">
         <header className="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>

@@ -42,7 +42,13 @@ const AdminPage = async () => {
       id: item.id,
       status: getPeriodStatus(item.start_date, item.end_date),
     })) ?? [];
-  return <AdminClient periods={periods} cashConfig={cashConfig!} />;
+  return (
+    <AdminClient
+      periods={periods}
+      cashConfig={cashConfig!}
+      username={user.username}
+    />
+  );
 };
 
 export default AdminPage;
