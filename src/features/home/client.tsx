@@ -3,6 +3,7 @@
 import { ArrowRight, UserRound } from "lucide-react";
 import { SubmitEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type Member = {
   id: string;
@@ -49,9 +50,16 @@ const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
               Kas XI <b className="text-[#550000]">PPLG 2</b>
             </span>
           </a>
-          <span className="hidden border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-1 text-[9px] font-black tracking-wider sm:inline-block">
-            2026 / 2027
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="hidden border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-1 text-[9px] font-black tracking-wider sm:inline-block">
+              2026 / 2027
+            </span>
+            <Link href={"/login"}>
+              <button className="border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-2 text-[12px] font-black cursor-pointer tracking-wider sm:inline-block hover:shadow-[4px_4px_0px_#241a1a] transition duration-300">
+                Login sebagai admin
+              </button>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -76,7 +84,7 @@ const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
         </section>
 
         <section
-          className="relative rounded-xl border-[3px] border-[#241a1a] bg-[#fffaf2] p-6 shadow-[8px_8px_0_#241a1a] sm:p-9"
+          className="relative rounded-xl border-[3px] border-[#241a1a] bg-[#fffaf2] p-6 shadow-[8px_8px_0_#241a1a] sm:p-9 overflow-hidden"
           aria-labelledby="member-picker-heading"
         >
           <div

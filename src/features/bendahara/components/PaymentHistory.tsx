@@ -4,6 +4,7 @@ import { CalendarDays, Download } from "lucide-react";
 import { PaymentRecord } from "../types";
 import { FC, useState } from "react";
 import { formatTime } from "@/utils/client";
+import { useRouter } from "next/navigation";
 
 type Props = {
   recentPayments: PaymentRecord[];
@@ -12,6 +13,10 @@ type Props = {
 const PaymentHistory: FC<Props> = ({ recentPayments }) => {
   const [showAll, setShowAll] = useState(false);
   const visiblePayments = showAll ? recentPayments : recentPayments.slice(0, 5);
+  const router = useRouter();
+  const handleExportExcel = async () => {
+    router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/api/export-excel`);
+  };
 
   return (
     <section className="mt-12" aria-labelledby="recent-heading">
@@ -30,6 +35,7 @@ const PaymentHistory: FC<Props> = ({ recentPayments }) => {
         <button
           type="button"
           className="flex min-h-10 items-center gap-2 rounded-md border-2 border-[#241a1a] bg-[#fffaf2] px-3 text-xs font-black shadow-[3px_3px_0_#241a1a] transition active:translate-x-[3px] active:translate-y-[3px] active:shadow-none focus-visible:outline focus-visible:outline-3 focus-visible:outline-[#550000]"
+          onClick={handleExportExcel}
         >
           <Download size={15} aria-hidden="true" /> <span>Export Excel</span>
         </button>
