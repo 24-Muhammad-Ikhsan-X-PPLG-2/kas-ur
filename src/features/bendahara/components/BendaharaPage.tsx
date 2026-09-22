@@ -25,6 +25,7 @@ type Props = {
     memberId: string;
     periods: Period[];
   }) => Promise<boolean>;
+  onDeletePayment: (payment: PaymentRecord) => Promise<void>;
   username: string;
 };
 
@@ -36,6 +37,7 @@ const BendaharaPage: FC<Props> = ({
   form,
   onSubmit,
   onSubmitSemester,
+  onDeletePayment,
   username,
 }) => (
   <main
@@ -71,8 +73,12 @@ const BendaharaPage: FC<Props> = ({
         periods={periods}
         recentPayments={recentPayments}
         onSubmitSemester={onSubmitSemester}
+        onDeletePayment={onDeletePayment}
       />
-      <PaymentHistory recentPayments={recentPayments} />
+      <PaymentHistory
+        recentPayments={recentPayments}
+        onDeletePayment={onDeletePayment}
+      />
       <MemberPaymentStatus member={members} periods={periods} />
 
       <div className="mt-10 flex items-center gap-3 border-2 border-dashed border-[#b8a49d] p-4 text-sm text-[#6f6262]">

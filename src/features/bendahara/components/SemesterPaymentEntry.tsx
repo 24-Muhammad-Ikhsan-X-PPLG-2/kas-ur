@@ -15,6 +15,7 @@ type Props = {
     memberId: string;
     periods: Period[];
   }) => Promise<boolean>;
+  onDeletePayment: (payment: PaymentRecord) => Promise<void>;
 };
 
 // Membuat key stabil untuk mencocokkan anggota dan periode pembayaran.
@@ -27,6 +28,7 @@ const SemesterPaymentEntry: FC<Props> = ({
   periods,
   recentPayments,
   onSubmitSemester,
+  onDeletePayment,
 }) => {
   const [memberId, setMemberId] = useState("");
   const [selectedPeriods, setSelectedPeriods] = useState<number[]>([]);
@@ -56,6 +58,23 @@ const SemesterPaymentEntry: FC<Props> = ({
 
   // Memilih atau membatalkan satu periode, termasuk pilihan rentang.
   const handlePeriodChange = (periodId: number, periodIndex: number) => {
+    const paidPayment = recentPayments.find(
+      (payment) =>
+        paymentKey(payment.memberId, payment.periodId) ===
+        paymentKey(memberId, periodId),
+    );
+
+    if (paidPayment) {
+      if (
+        window.confirm(
+          `Hapus pembayaran ${paidPayment.member} untuk periode ${paidPayment.period}?`,
+        )
+      ) {
+        void onDeletePayment(paidPayment);
+      }
+      return;
+    }
+
     const anchorIndex = periods.findIndex(
       (period) => period.id === anchorPeriodId,
     );
@@ -156,7 +175,9 @@ const SemesterPaymentEntry: FC<Props> = ({
           value={memberId}
           onChange={(event) => handleMemberChange(event.target.value)}
         >
-          <option value="">Pilih anggota</option>
+          <option value="" defaultChecked>
+            Pilih anggota
+          </option>
           {members.map((member) => (
             <option value={member.id} key={member.id}>
               {member.name}

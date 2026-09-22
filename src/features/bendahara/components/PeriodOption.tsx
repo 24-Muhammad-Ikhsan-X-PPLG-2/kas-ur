@@ -22,7 +22,7 @@ const PeriodOption = ({
   onSelect,
 }: PeriodOptionProps) => {
   const periodClassName = isPaid
-    ? "cursor-not-allowed border-[#557348] bg-[#edf4e9]"
+    ? "cursor-pointer border-[#557348] bg-[#edf4e9]"
     : isSelected
       ? "cursor-pointer border-[#550000] bg-[#f4e4df]"
       : "cursor-pointer border-[#ddd0c7] bg-[#fffaf2] hover:border-[#241a1a]";
@@ -39,7 +39,7 @@ const PeriodOption = ({
         checked={isSelected}
         onChange={() => undefined}
         onClick={() => onSelect(period.id, index)}
-        disabled={isPaid || isSubmitting}
+        disabled={isSubmitting}
         className="peer sr-only"
       />
       <span
@@ -50,7 +50,7 @@ const PeriodOption = ({
       <span>
         <span className="block text-xs font-black">Minggu {index + 1}</span>
         <span className="mt-1 block text-xs text-[#6f6262]">
-          {isPaid ? "Sudah bayar" : period.label}
+          {isPaid ? "Sudah bayar - klik untuk hapus" : period.label}
         </span>
       </span>
     </label>

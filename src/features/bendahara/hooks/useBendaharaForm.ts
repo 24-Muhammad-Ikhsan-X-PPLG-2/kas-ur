@@ -102,6 +102,7 @@ export const useBendaharaForm = ({
           .from("cash_payments")
           .update({
             amount: data.amount,
+            note: data.note,
             recorded_by: user.id,
           })
           .eq("id", exists.id);
@@ -123,6 +124,7 @@ export const useBendaharaForm = ({
             member_id: data.memberId,
             amount: Number(data.amount),
             paid_at: new Date(data.paidAt).toISOString(),
+            note: data.note,
             recorded_by: user.id,
           })
           .select("*");
@@ -275,6 +277,37 @@ export const useBendaharaForm = ({
     }
   };
 
+  const onDeletePayment = async (payment: PaymentRecord) => {
+    const toastId = toast.loading("Menghapus pembayaran...");
+
+    try {
+      const { error } = await supabase
+        .from("cash_payments")
+        .delete()
+        .eq("id", payment.id);
+
+      if (error) throw error;
+
+      setRecentPayments((current) =>
+        current.filter((item) => item.id !== payment.id),
+      );
+      toast.update(toastId, {
+        render: "Pembayaran berhasil dihapus",
+        isLoading: false,
+        autoClose: 3000,
+        type: "success",
+      });
+    } catch (error) {
+      toast.update(toastId, {
+        render: "Gagal menghapus pembayaran",
+        isLoading: false,
+        autoClose: 3000,
+        type: "error",
+      });
+      console.error(error);
+    }
+  };
+
   return {
     form,
     periods,
@@ -283,5 +316,6 @@ export const useBendaharaForm = ({
     summary,
     onSubmit,
     onSubmitSemester,
+    onDeletePayment,
   };
 };

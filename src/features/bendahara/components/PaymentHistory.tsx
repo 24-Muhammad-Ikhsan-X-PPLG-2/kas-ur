@@ -1,18 +1,25 @@
 "use client";
 
-import { CalendarDays, Download } from "lucide-react";
+import { CalendarDays, Download, Trash2 } from "lucide-react";
 import { PaymentRecord } from "../types";
 import { FC, useState } from "react";
-import { formatTime } from "@/utils/client";
+import { formatTime, money } from "@/utils/client";
 import { useRouter } from "next/navigation";
 
 type Props = {
   recentPayments: PaymentRecord[];
+  onDeletePayment: (payment: PaymentRecord) => Promise<void>;
 };
 
-const PaymentHistory: FC<Props> = ({ recentPayments }) => {
+const PaymentHistory: FC<Props> = ({ recentPayments, onDeletePayment }) => {
   const [showAll, setShowAll] = useState(false);
-  const visiblePayments = showAll ? recentPayments : recentPayments.slice(0, 5);
+  const sortedPayments = [...recentPayments].sort((first, second) => {
+    const dateDifference =
+      new Date(second.date).getTime() - new Date(first.date).getTime();
+
+    return dateDifference || second.id - first.id;
+  });
+  const visiblePayments = showAll ? sortedPayments : sortedPayments.slice(0, 5);
   const router = useRouter();
   const handleExportExcel = async () => {
     router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/api/export-excel`);
@@ -41,21 +48,24 @@ const PaymentHistory: FC<Props> = ({ recentPayments }) => {
         </button>
       </div>
       <div className="overflow-hidden rounded-lg border-[3px] border-[#241a1a] bg-[#fffaf2] shadow-[6px_6px_0_#241a1a]">
-        <div className="hidden grid-cols-[1.1fr_1.3fr_.8fr_.7fr_.8fr] gap-4 border-b-[3px] border-[#241a1a] bg-[#ead6d1] px-5 py-3 text-[10px] font-black uppercase tracking-wide md:grid">
+        <div className="hidden grid-cols-[1.1fr_1.3fr_.8fr_.7fr_.8fr_auto] gap-4 border-b-[3px] border-[#241a1a] bg-[#ead6d1] px-5 py-3 text-[10px] font-black uppercase tracking-wide md:grid">
           <span>Anggota</span>
           <span>Periode</span>
           <span>Nominal</span>
           <span>Tanggal</span>
           <span>Status</span>
+          <span className="sr-only">Aksi</span>
         </div>
         {visiblePayments.map((payment) => (
           <div
-            key={`${payment.member}-${payment.date}`}
-            className="grid gap-3 border-b-2 border-[#ddd0c7] px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_1.3fr_.8fr_.7fr_.8fr] md:items-center md:gap-4 md:px-5"
+            key={payment.id}
+            className="grid gap-3 border-b-2 border-[#ddd0c7] px-4 py-4 last:border-b-0 md:grid-cols-[1.1fr_1.3fr_.8fr_.7fr_.8fr_auto] md:items-center md:gap-4 md:px-5"
           >
             <span className="font-black">{payment.member}</span>
             <span className="text-sm text-[#6f6262]">{payment.period}</span>
-            <span className="font-black text-[#550000]">{payment.amount}</span>
+            <span className="font-black text-[#550000]">
+              {money(Number(payment.amount))}
+            </span>
             <span className="flex items-center gap-1 text-sm text-[#6f6262]">
               <CalendarDays size={14} aria-hidden="true" />
               {formatTime(payment.date)}
@@ -63,6 +73,24 @@ const PaymentHistory: FC<Props> = ({ recentPayments }) => {
             <span className="w-fit border-2 border-[#550000] px-2 py-1 text-[10px] font-black uppercase text-[#550000]">
               {5000 > Number(payment.amount) ? "Nunggak" : "Tercatat"}
             </span>
+            <button
+              type="button"
+              title={`Hapus pembayaran ${payment.member}`}
+              aria-label={`Hapus pembayaran ${payment.member} untuk ${payment.period}`}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    `Hapus pembayaran ${payment.member} untuk periode ${payment.period}?`,
+                  )
+                ) {
+                  void onDeletePayment(payment);
+                }
+              }}
+              className="flex min-h-10 w-fit items-center gap-2 rounded-md border-2 border-[#550000] px-3 text-xs font-black text-[#550000] transition hover:bg-[#550000] hover:text-[#fffaf2] focus-visible:outline focus-visible:outline-3 focus-visible:outline-[#550000]"
+            >
+              <Trash2 size={15} aria-hidden="true" />
+              <span className="md:hidden">Hapus pembayaran</span>
+            </button>
           </div>
         ))}
       </div>

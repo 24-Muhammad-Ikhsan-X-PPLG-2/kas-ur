@@ -42,6 +42,14 @@ const MONTH_FORMATTER = new Intl.DateTimeFormat("id-ID", {
 
 const CURRENCY_FORMAT = '#,##0.00 "IDR"';
 
+function getShortPeriodLabel(startDate: string, endDate: string) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const month = end.toLocaleDateString("id-ID", { month: "short" });
+
+  return `${start.getDate()}-${end.getDate()} ${month}`;
+}
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -292,7 +300,7 @@ export async function GET() {
 
         const cell = worksheet.getCell(2, column);
 
-        cell.value = `MINGGU ${index + 1}`;
+        cell.value = getShortPeriodLabel(period.start_date, period.end_date);
       });
 
       // ========================================================
@@ -380,7 +388,9 @@ export async function GET() {
             0,
           );
 
-          if (periodPayments.length > 0) {
+          const isPeriodPaid = totalPayment >= Number(period.amount);
+
+          if (isPeriodPaid) {
             paidPeriodCount++;
           }
 
