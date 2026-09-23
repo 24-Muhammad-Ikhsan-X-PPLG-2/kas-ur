@@ -4,6 +4,8 @@ import { ArrowRight, UserRound } from "lucide-react";
 import { SubmitEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Navbar from "./components/navbar";
+import useForm from "./hooks/useForm";
 
 type Member = {
   id: string;
@@ -17,18 +19,8 @@ type HomeClientProps = {
 
 // Menampilkan halaman pemilihan anggota sebelum masuk ke halaman kas.
 const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
-  const router = useRouter();
-  const [selectedMemberId, setSelectedMemberId] = useState("");
-  const [isNavigating, setIsNavigating] = useState(false);
-
-  // Mengarahkan anggota ke halaman kas berdasarkan ID, bukan nama.
-  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!selectedMemberId || isNavigating) return;
-
-    setIsNavigating(true);
-    router.push(`/kas/${encodeURIComponent(selectedMemberId)}`);
-  };
+  const { handleSubmit, isNavigating, selectedMemberId, setSelectedMemberId } =
+    useForm();
 
   const hasMembers = members.length > 0;
   const isDisabled =
@@ -36,32 +28,7 @@ const HomeClient = ({ members, errorMessage }: HomeClientProps) => {
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#f7f1e8] text-[#241a1a]">
-      <nav className="border-b-[3px] border-[#241a1a] bg-[#f7f1e8] px-5 py-4 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <a
-            href="/"
-            className="flex items-center gap-3 text-base font-black tracking-[-0.06em] sm:text-xl"
-            aria-label="Kas XI PPLG 2 beranda"
-          >
-            <span className="grid h-9 w-10 -rotate-3 place-items-center border-[3px] border-[#241a1a] bg-[#550000] text-sm text-[#f7f1e8] shadow-[4px_4px_0_#241a1a]">
-              XI
-            </span>
-            <span>
-              Kas XI <b className="text-[#550000]">PPLG 2</b>
-            </span>
-          </a>
-          <div className="flex items-center gap-2">
-            <span className="hidden border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-1 text-[9px] font-black tracking-wider sm:inline-block">
-              2026 / 2027
-            </span>
-            <Link href={"/login"}>
-              <button className="border-2 border-[#241a1a] bg-[#fffaf2] px-2 py-2 text-[12px] font-black cursor-pointer tracking-wider sm:inline-block hover:shadow-[4px_4px_0px_#241a1a] transition duration-300">
-                Login sebagai admin
-              </button>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="mx-auto grid min-h-[calc(100vh-76px)] max-w-6xl items-center gap-12 px-5 py-12 sm:px-8 sm:py-16 lg:grid-cols-[1.05fr_.95fr] lg:px-10">
         <section>
