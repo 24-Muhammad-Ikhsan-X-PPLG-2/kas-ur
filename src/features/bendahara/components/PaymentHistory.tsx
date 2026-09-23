@@ -63,9 +63,7 @@ const PaymentHistory: FC<Props> = ({ recentPayments, onDeletePayment }) => {
           >
             <span className="font-black">{payment.member}</span>
             <span className="text-sm text-[#6f6262]">{payment.period}</span>
-            <span className="font-black text-[#550000]">
-              {money(Number(payment.amount))}
-            </span>
+            <span className="font-black text-[#550000]">{payment.amount}</span>
             <span className="flex items-center gap-1 text-sm text-[#6f6262]">
               <CalendarDays size={14} aria-hidden="true" />
               {formatTime(payment.date)}

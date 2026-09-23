@@ -74,7 +74,7 @@ function mapPaymentRecords(data: PaymentRow[]): PaymentRecord[] {
     id: payment.id,
     memberId: payment.member_id,
     periodId: payment.period_id,
-    amount: payment.amount.toString(),
+    amount: money(Number(payment.amount)),
     period: getShortPeriodLabel(
       payment.cash_periods.start_date,
       payment.cash_periods.end_date,
