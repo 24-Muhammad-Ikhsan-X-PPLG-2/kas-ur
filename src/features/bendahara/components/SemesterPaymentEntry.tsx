@@ -47,6 +47,15 @@ const SemesterPaymentEntry: FC<Props> = ({
   const allPeriodsSelected =
     unpaidPeriods.length > 0 &&
     unpaidPeriods.every((period) => selectedPeriods.includes(period.id));
+  const periodGroups = periods.reduce<Map<string, Period[]>>(
+    (groups, period) => {
+      const group = groups.get(period.monthKey) ?? [];
+      group.push(period);
+      groups.set(period.monthKey, group);
+      return groups;
+    },
+    new Map(),
+  );
 
   // Mengganti anggota sekaligus membersihkan pilihan periode sebelumnya.
   const handleMemberChange = (nextMemberId: string) => {
@@ -207,24 +216,39 @@ const SemesterPaymentEntry: FC<Props> = ({
             />
           </div>
 
-          <div className="grid gap-3 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
-            {periods.map((period, index) => {
-              const isPaid = paidPeriodKeys.has(
-                paymentKey(memberId, period.id),
-              );
+          <div className="space-y-6 p-4 sm:p-5">
+            {[...periodGroups.values()].map((group) => (
+              <div key={group[0].monthKey}>
+                <h3 className="mb-3 border-b-2 border-[#b8a49d] pb-2 text-sm font-black uppercase tracking-[0.08em] text-[#550000]">
+                  {group[0].monthLabel}
+                </h3>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.map((period, groupIndex) => {
+                    const index = periods.findIndex(
+                      (item) => item.id === period.id,
+                    );
+                    const isPaid = paidPeriodKeys.has(
+                      paymentKey(memberId, period.id),
+                    );
 
-              return (
-                <PeriodOption
-                  key={period.id}
-                  period={period}
-                  index={index}
-                  isPaid={isPaid}
-                  isSelected={isPaid || selectedPeriods.includes(period.id)}
-                  isSubmitting={isSubmitting}
-                  onSelect={handlePeriodChange}
-                />
-              );
-            })}
+                    return (
+                      <PeriodOption
+                        key={period.id}
+                        period={period}
+                        index={index}
+                        weekNumber={groupIndex + 1}
+                        isPaid={isPaid}
+                        isSelected={
+                          isPaid || selectedPeriods.includes(period.id)
+                        }
+                        isSubmitting={isSubmitting}
+                        onSelect={handlePeriodChange}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

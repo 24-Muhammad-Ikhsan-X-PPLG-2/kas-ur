@@ -6,6 +6,7 @@ import { Period } from "../types";
 type PeriodOptionProps = {
   period: Period;
   index: number;
+  weekNumber: number;
   isPaid: boolean;
   isSelected: boolean;
   isSubmitting: boolean;
@@ -16,6 +17,7 @@ type PeriodOptionProps = {
 const PeriodOption = ({
   period,
   index,
+  weekNumber,
   isPaid,
   isSelected,
   isSubmitting,
@@ -48,7 +50,7 @@ const PeriodOption = ({
         <Check size={13} strokeWidth={3} aria-hidden="true" />
       </span>
       <span>
-        <span className="block text-xs font-black">Minggu {index + 1}</span>
+        <span className="block text-xs font-black">Minggu {weekNumber}</span>
         <span className="mt-1 block text-xs text-[#6f6262]">
           {isPaid ? "Sudah bayar - klik untuk hapus" : period.label}
         </span>

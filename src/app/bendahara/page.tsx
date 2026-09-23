@@ -32,32 +32,56 @@ type PaymentRow = {
 
 // Membuat label periode dengan nama bulan lengkap.
 function getPeriodLabel(startDate: string, endDate: string) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const month = end.toLocaleDateString("id-ID", { month: "long" });
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  const startMonth = start.toLocaleDateString("id-ID", { month: "long" });
+  const endMonth = end.toLocaleDateString("id-ID", { month: "long" });
 
-  return `${start.getDate()}-${end.getDate()} ${month} ${end.getFullYear()}`;
+  if (
+    start.getMonth() !== end.getMonth() ||
+    start.getFullYear() !== end.getFullYear()
+  ) {
+    return `${start.getDate()} ${startMonth} ${start.getFullYear()} - ${end.getDate()} ${endMonth} ${end.getFullYear()}`;
+  }
+
+  return `${start.getDate()}-${end.getDate()} ${endMonth} ${end.getFullYear()}`;
 }
 
 // Membuat label periode ringkas untuk riwayat pembayaran.
 function getShortPeriodLabel(startDate: string, endDate: string) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  const month = end.toLocaleDateString("id-ID", { month: "short" });
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  const endMonth = end.toLocaleDateString("id-ID", { month: "short" });
+  const startFullMonth = start.toLocaleDateString("id-ID", { month: "long" });
+  const endFullMonth = end.toLocaleDateString("id-ID", { month: "long" });
 
-  return `${start.getDate()}-${end.getDate()} ${month}`;
+  if (
+    start.getMonth() !== end.getMonth() ||
+    start.getFullYear() !== end.getFullYear()
+  ) {
+    return `${start.getDate()} ${startFullMonth} - ${end.getDate()} ${endFullMonth}`;
+  }
+
+  return `${start.getDate()}-${end.getDate()} ${endMonth}`;
 }
 
 // Mengubah data periode database menjadi data yang siap ditampilkan.
 function mapPeriods(
   data: { id: number; amount: number; start_date: string; end_date: string }[],
 ): Period[] {
-  return data.map((period) => ({
-    id: period.id,
-    amount: money(period.amount),
-    label: getPeriodLabel(period.start_date, period.end_date),
-    shortLabel: getShortPeriodLabel(period.start_date, period.end_date),
-  }));
+  return [...data]
+    .sort((first, second) => first.start_date.localeCompare(second.start_date))
+    .map((period) => ({
+      id: period.id,
+      amount: money(period.amount),
+      label: getPeriodLabel(period.start_date, period.end_date),
+      shortLabel: getShortPeriodLabel(period.start_date, period.end_date),
+      monthKey: period.start_date.slice(0, 7),
+      monthLabel: new Date(`${period.start_date}T00:00:00`).toLocaleDateString(
+        "id-ID",
+        { month: "long", year: "numeric" },
+      ),
+    }));
 }
 
 // Mengubah data anggota database menjadi data yang dipakai komponen client.

@@ -3,7 +3,7 @@
 import { CalendarDays, Download, Trash2 } from "lucide-react";
 import { PaymentRecord } from "../types";
 import { FC, useState } from "react";
-import { formatTime, money } from "@/utils/client";
+import { formatTime } from "@/utils/client";
 import { useRouter } from "next/navigation";
 
 type Props = {

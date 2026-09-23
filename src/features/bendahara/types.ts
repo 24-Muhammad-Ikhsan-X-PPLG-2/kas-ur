@@ -2,6 +2,8 @@ export type Period = {
   id: number;
   label: string;
   shortLabel: string;
+  monthKey: string;
+  monthLabel: string;
   amount: string;
 };
 
