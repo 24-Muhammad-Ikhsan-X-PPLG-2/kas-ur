@@ -20,6 +20,20 @@ const PeriodSection: FC<Props> = ({
   setEditingPeriod,
   setModal,
 }) => {
+  const statusOrder: Record<string, number> = {
+    Aktif: 0,
+    Selesai: 1,
+    Mendatang: 2,
+  };
+  const sortedPeriods = [...periods].sort((first, second) => {
+    const statusDifference =
+      (statusOrder[first.status] ?? 3) - (statusOrder[second.status] ?? 3);
+
+    if (statusDifference !== 0) return statusDifference;
+
+    return first.startDate.localeCompare(second.startDate);
+  });
+
   return (
     <section className="mt-14" aria-labelledby="periods-heading">
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -62,7 +76,7 @@ const PeriodSection: FC<Props> = ({
             <span>Status</span>
             <span>Aksi</span>
           </div>
-          {periods.map((period) => (
+          {sortedPeriods.map((period) => (
             <div
               key={period.id}
               className="grid gap-4 border-b-2 border-[#ddd0c7] p-4 last:border-b-0 md:grid-cols-[1.6fr_1fr_1fr_.6fr] md:items-center md:gap-4 md:px-5"

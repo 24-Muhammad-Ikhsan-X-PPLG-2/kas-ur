@@ -139,7 +139,7 @@ export async function GET() {
     }
 
     // ============================================================
-    // KELOMPOKKAN PERIOD BERDASARKAN BULANN
+    // KELOMPOKKAN PERIOD BERDASARKAN BULAN
     // ============================================================
 
     const monthMap = new Map<string, MonthGroup>();
