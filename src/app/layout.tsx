@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Masuk | Kas XI PPLG 2",
+  title: "Kas XI PPLG 2",
   description: "Ruang digital untuk urusan kas kelas XI PPLG 2.",
 };
 

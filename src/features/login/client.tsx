@@ -8,6 +8,7 @@ import { Eye, EyeClosed } from "lucide-react";
 import AuthService from "@/service/AuthService";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const loginSchema = z.object({
   email: z
@@ -203,12 +204,12 @@ const LoginClient = () => {
               )}
             </div>
             <div className="mb-5 flex justify-end">
-              <a
-                href="#forgot-password"
+              <Link
+                href="/forgot-password"
                 className="text-sm font-extrabold text-[#550000] underline underline-offset-4 focus-visible:outline focus-visible:outline-3 focus-visible:outline-[#550000]"
               >
                 Lupa password?
-              </a>
+              </Link>
             </div>
             <button
               type="submit"

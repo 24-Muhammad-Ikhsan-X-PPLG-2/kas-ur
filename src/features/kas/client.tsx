@@ -9,74 +9,7 @@ import {
   WalletCards,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-type PaymentScheduleItem = {
-  id: number;
-  period: string;
-  amount: string;
-  status: "Sudah lunas" | "Belum lunas";
-};
-
-type NextPayment = {
-  amount: string;
-  dueDate: string;
-  period: string;
-};
-
-type KasClientProps = {
-  username: string;
-  weeklyAmount: string;
-  nextPayment: NextPayment | null;
-  paymentSchedule: PaymentScheduleItem[];
-};
-
-const QrPlaceholder = () => {
-  const pattern = [
-    "111111100101101111111",
-    "100000101110101000001",
-    "101110100010101011101",
-    "101110101111101011101",
-    "101110100101101011101",
-    "100000101010101000001",
-    "111111101010101111111",
-    "000000001101100000000",
-    "101101111001011011101",
-    "010011001110100110010",
-    "111010111011111000111",
-    "001101000110001101100",
-    "111111101101110101011",
-    "100000101011011100101",
-    "101110101110101110111",
-    "101110100011100011001",
-    "101110101101011101101",
-    "100000101100110010011",
-    "111111101011101111111",
-  ];
-
-  return (
-    <div className="border-[3px] border-[#241a1a] bg-white p-3 shadow-[5px_5px_0_#241a1a]">
-      <div className="grid aspect-square w-full grid-cols-[repeat(21,1fr)] gap-[2px] bg-white">
-        {pattern.flatMap((row, rowIndex) =>
-          [...row].map((cell, columnIndex) => (
-            <span
-              key={`${rowIndex}-${columnIndex}`}
-              className={cell === "1" ? "bg-[#241a1a]" : "bg-white"}
-            />
-          )),
-        )}
-      </div>
-      <p className="mt-3 text-center font-mono text-[9px] font-bold uppercase tracking-wider text-[#6f6262]">
-        placeholder only
-      </p>
-    </div>
-  );
-};
-
-type ScheduleItemProps = {
-  period: string;
-  amount: string;
-  status: PaymentScheduleItem["status"];
-};
+import { KasClientProps, ScheduleItemProps } from "./type";
 
 // Menampilkan satu periode beserta status pembayaran aktualnya.
 const ScheduleItem = ({ period, amount, status }: ScheduleItemProps) => {
@@ -107,7 +40,6 @@ const ScheduleItem = ({ period, amount, status }: ScheduleItemProps) => {
 
 const KasClient = ({
   username,
-  weeklyAmount,
   nextPayment,
   paymentSchedule,
 }: KasClientProps) => {
@@ -244,6 +176,44 @@ const KasClient = ({
         </section>
 
         <section
+          className="mt-16 overflow-hidden rounded-xl border-[3px] border-[#241a1a] bg-[#550000] text-[#fffaf2] shadow-[8px_8px_0_#241a1a]"
+          aria-labelledby="announcement-heading"
+        >
+          <div className="grid gap-6 p-6 sm:p-9 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
+            <div>
+              <p className="mb-3 font-mono text-xs font-black uppercase tracking-[0.13em] text-[#e7b8b0]">
+                Papan pengumuman
+              </p>
+              <h2
+                id="announcement-heading"
+                className="text-3xl font-black tracking-[-0.06em] sm:text-4xl"
+              >
+                Pembayaran via QRIS belum tersedia
+              </h2>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#f5ded9] sm:text-base">
+                Fitur pembayaran kas menggunakan QRIS masih belum bisa
+                digunakan. Developer sedang sibuk mempersiapkan ujian tengah
+                semester.
+              </p>
+            </div>
+
+            <div className="flex flex-col justify-center rounded-xl border-[3px] border-[#241a1a] bg-[#ead8d4] p-5 text-[#241a1a] shadow-[4px_4px_0_#241a1a]">
+              <div className="mb-3 flex items-center gap-2 font-mono text-sm font-black">
+                <span className="grid h-7 w-7 place-items-center border-2 border-[#241a1a] bg-[#fffaf2] text-xs">
+                  !
+                </span>
+                Status fitur
+              </div>
+              <p className="text-2xl font-black tracking-[-0.06em]">
+                Dalam pengembangan
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-[#6f6262]">
+                QRIS akan segera tersedia setelah bendahara mendapatkan KTP.
+              </p>
+            </div>
+          </div>
+        </section>
+        {/* <section
           className="mt-16 grid overflow-hidden rounded-xl border-[3px] border-[#241a1a] bg-[#550000] text-[#fffaf2] shadow-[8px_8px_0_#241a1a] md:grid-cols-[1fr_0.75fr]"
           aria-labelledby="qris-heading"
         >
@@ -285,7 +255,7 @@ const KasClient = ({
               QRIS hanya placeholder untuk tampilan.
             </p>
           </div>
-        </section>
+        </section> */}
 
         <aside className="mt-10 flex items-start gap-4 rounded-lg border-[3px] border-[#241a1a] bg-[#fffaf2] p-5 shadow-[5px_5px_0_#241a1a]">
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md border-2 border-[#241a1a] bg-[#ead6d1] text-[#550000]">
