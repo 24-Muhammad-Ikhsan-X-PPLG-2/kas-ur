@@ -7,7 +7,7 @@ import { forgotPasswordSchema, ForgotPasswordValues } from "../schema";
 import AuthService from "@/service/AuthService";
 import { toast } from "react-toastify";
 
-const useFormResetPassword = () => {
+const useFormForgotPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -65,4 +65,4 @@ const useFormResetPassword = () => {
   };
 };
 
-export default useFormResetPassword;
+export default useFormForgotPassword;
