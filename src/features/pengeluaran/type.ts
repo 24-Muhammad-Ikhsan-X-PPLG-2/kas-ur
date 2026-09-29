@@ -25,4 +25,17 @@ export type Expense = {
   } | null;
 };
 
+export type ExpenseSummaryRow = {
+  amount: number | string;
+  spent_at: string;
+};
+
+export type PaymentSummaryRow = {
+  amount: number | string;
+};
+
+export type ExpenseClientProps = {
+  username: string;
+};
+
 export type DateFilter = "all" | "month" | "threeMonths" | "year";
