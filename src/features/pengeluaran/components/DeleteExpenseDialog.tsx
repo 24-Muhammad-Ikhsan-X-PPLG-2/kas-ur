@@ -27,8 +27,7 @@ const DeleteExpenseDialog = ({
         aria-hidden="true"
       />
       <span>
-        Data ini hanya dihapus dari tampilan mock dan bisa digantikan nanti saat
-        backend sudah terhubung.
+        Data pengeluaran ini akan dihapus secara permanen dari catatan kas.
       </span>
     </div>
     <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
