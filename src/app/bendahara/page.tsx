@@ -111,6 +111,7 @@ function mapPaymentRecords(data: PaymentRow[]): PaymentRecord[] {
 // Menghitung ringkasan pembayaran dari data transaksi terbaru.
 function buildSummary(
   payments: PaymentRow[],
+  expenses: { amount: number }[],
   memberCount: number,
 ): SummaryData {
   const today = new Date();
@@ -128,12 +129,16 @@ function buildSummary(
     (total, payment) => total + Number(payment.amount),
     0,
   );
+  const totalExpenses = expenses.reduce(
+    (total, expense) => total + Number(expense.amount),
+    0,
+  );
 
   return {
     paymentsToday: paymentsToday.toString(),
     paidMembers: paidMemberCount.toString(),
     unpaidMembers: Math.max(memberCount - paidMemberCount, 0).toString(),
-    totalCash: money(totalCash),
+    totalCash: money(totalCash - totalExpenses),
   };
 }
 
@@ -160,16 +165,28 @@ const BendaharaPage = async () => {
         name
       )
     `);
+  const { data: dataCashExpenses } = await supabase
+    .from("cash_expenses")
+    .select("amount");
   const periods = mapPeriods(dataCashPeriods ?? []);
   const members = mapMembers(dataMember ?? []);
   const payments = mapPaymentRecords(dataCashPayments ?? []);
-  const summary = buildSummary(dataCashPayments ?? [], members.length);
+  const summary = buildSummary(
+    dataCashPayments ?? [],
+    dataCashExpenses ?? [],
+    members.length,
+  );
+  const expensesTotalFromServer = (dataCashExpenses ?? []).reduce(
+    (total, expense) => total + Number(expense.amount),
+    0,
+  );
   return (
     <BendaharaClient
       paymentsRecord={payments}
       memberFromServer={members}
       periodsFromServer={periods}
       summary={summary}
+      expensesTotalFromServer={expensesTotalFromServer}
       username={user.username}
     />
   );

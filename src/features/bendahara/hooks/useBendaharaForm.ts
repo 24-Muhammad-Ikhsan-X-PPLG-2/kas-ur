@@ -14,6 +14,7 @@ type UseBendaharaFormProps = {
   memberFromServer: Member[];
   paymentsRecord: PaymentRecord[];
   summary: SummaryData;
+  expensesTotalFromServer: number;
 };
 
 type SemesterPaymentInput = {
@@ -45,6 +46,7 @@ function isSamePayment(
 function getSummary(
   payments: PaymentRecord[],
   memberCount: number,
+  expensesTotal: number,
 ): SummaryData {
   const today = getNowDate();
   const paidMemberIds = new Set(
@@ -62,7 +64,7 @@ function getSummary(
       .length.toString(),
     paidMembers: paidMemberIds.size.toString(),
     unpaidMembers: Math.max(memberCount - paidMemberIds.size, 0).toString(),
-    totalCash: money(totalCash),
+    totalCash: money(totalCash - expensesTotal),
   };
 }
 
@@ -70,6 +72,7 @@ export const useBendaharaForm = ({
   periodsFromServer,
   memberFromServer,
   paymentsRecord,
+  expensesTotalFromServer,
 }: UseBendaharaFormProps) => {
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -80,7 +83,11 @@ export const useBendaharaForm = ({
   const [members] = useState<Member[]>(memberFromServer);
   const [recentPayments, setRecentPayments] =
     useState<PaymentRecord[]>(paymentsRecord);
-  const summary = getSummary(recentPayments, members.length);
+  const summary = getSummary(
+    recentPayments,
+    members.length,
+    expensesTotalFromServer,
+  );
 
   const onSubmit = async (data: PaymentFormValues) => {
     const toastId = toast.loading("Bentaran...");
