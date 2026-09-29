@@ -6,6 +6,7 @@ import { UseFormReturn } from "react-hook-form";
 import BendaharaFooter from "./BendaharaFooter";
 import BendaharaHeader from "./BendaharaHeader";
 import BendaharaNavbar from "./BendaharaNavbar";
+import ExpenseSection from "./ExpenseSection";
 import MemberPaymentStatus from "./MemberPaymentStatus";
 import PaymentEntryForm from "./PaymentEntryForm";
 import PaymentHistory from "./PaymentHistory";
@@ -61,6 +62,8 @@ const BendaharaPage: FC<Props> = ({
         <SummaryCard label="Belum Bayar" value={summary.unpaidMembers} accent />
         <SummaryCard label="Total Kas" value={summary.totalCash} />
       </section>
+
+      <ExpenseSection />
 
       <PaymentEntryForm
         members={members}
